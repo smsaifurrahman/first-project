@@ -1,15 +1,15 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connect, Model, Types } from 'mongoose';
 
 // 1. Create an interface representing a document in MongoDB.
 
-export type UserName = {
+export type TUserName = {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
-  address: string;
+ 
 };
 
-export type Guardian = {
+export type TGuardian = {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: string;
@@ -18,25 +18,41 @@ export type Guardian = {
   motherContactNo: string;
 };
 
-export type LocalGuardian = {
+export type TLocalGuardian = {
   name: string;
   occupation: string;
   contactNo: string;
 };
 
-export type Student = {
-  id: string;
-  name: UserName;
-  gender: 'male' | 'female';
-  dateOfBirth: string;
+export type TStudent = {
+  id: string; 
+  user: Types.ObjectId;
+  password: string;
+  name: TUserName;
+  gender: 'male' | 'female' | 'others';
+  dateOfBirth?: string;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;
-  guardian: Guardian;
-  localGuardian: LocalGuardian;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 };
+
+
+//  for creating static
+export interface StudentModel extends Model<TStudent> {
+  isUserExists(id: string): Promise<TStudent| null>
+}
+
+
+// //for creating instance
+// export type StudentMethods = {
+//   isUserExists (id: string):  Promise<TStudent | null>
+// }
+
+// export type StudentModel = Model<TStudent, Record<string, never> , StudentMethods>;
