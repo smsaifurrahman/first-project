@@ -29,27 +29,32 @@ const LocalGuardianValidationSchema = z.object({
 });
 
 // Zod schema for Student
-const studentValidationSchema = z.object({
-  id: z.string().min(1, 'Student ID is required'),
-  password: z.string().max(20),
-  name: UserNameValidationSchema,
-  gender: z.enum(['male', 'female', 'others'], { 
-    errorMap: () => ({ message: 'Gender must be "male", "female", or "other"' }),
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().max(20),
+    student: z.object({
+      name: UserNameValidationSchema,
+      gender: z.enum(['male', 'female', 'others'], {
+        errorMap: () => ({
+          message: 'Gender must be "male", "female", or "other"',
+        }),
+      }),
+      dateOfBirth: z.date().optional(),
+      email: z.string().email('Invalid email format'),
+      contactNo: z.string().min(1, 'Contact Number is required'),
+      emergencyContactNo: z
+        .string()
+        .min(1, 'Emergency Contact Number is required'),
+      bloodGroup: z
+        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+        .optional(),
+      presentAddress: z.string().min(1, 'Present Address is required'),
+      permanentAddress: z.string().min(1, 'Permanent Address is required'),
+      guardian: GuardianValidationSchema,
+      localGuardian: LocalGuardianValidationSchema,
+      profileImg: z.string().optional(),
+    }),
   }),
-  dateOfBirth: z.string().optional(),
-  email: z.string().email('Invalid email format'),
-  contactNo: z.string().min(1, 'Contact Number is required'),
-  emergencyContactNo: z.string().min(1, 'Emergency Contact Number is required'),
-  bloodGroup: z
-    .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-    .optional(),
-  presentAddress: z.string().min(1, 'Present Address is required'),
-  permanentAddress: z.string().min(1, 'Permanent Address is required'),
-  guardian: GuardianValidationSchema,
-  localGuardian: LocalGuardianValidationSchema,
-  profileImg: z.string().optional(),
-  isActive: z.enum(['active', 'blocked']).default('active'),
-  isDeleted: z.boolean()
 });
 
-export { studentValidationSchema };
+export const studentValidations = { createStudentValidationSchema };
