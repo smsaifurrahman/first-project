@@ -1,5 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { TAcademicDepartment } from './academicDepartment.interface';
+import AppError from '../../errors/AppError';
+import { HttpStatus } from 'http-status-ts';
 
 const academicDepartmentSchema = new Schema<TAcademicDepartment>(
   {
@@ -26,11 +28,12 @@ academicDepartmentSchema.pre('save', async function (next) {
   });
 
   if (isDepartmentExits) {
-    throw new Error('This department is already exits');
+    throw new AppError( HttpStatus.NOT_FOUND  ,'This department is already exits');
   }
 
   next();
 });
+
 
 
 academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
@@ -38,7 +41,7 @@ academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   const isDepartmentExits = await AcademicDepartment.findOne(query);
 
   if (!isDepartmentExits) {
-    throw new Error('This department does not exit ');
+    throw new AppError( HttpStatus.NOT_FOUND,'This department does not exit ');
   }
 
   next()

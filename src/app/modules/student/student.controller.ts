@@ -1,8 +1,7 @@
 import { TStudent } from './student.interface';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServices } from './student.service';
-// import Joi from 'joi';
-// import { z } from "zod";
+
 import { studentValidationSchema } from './student.validation';
 import { HttpStatus } from 'http-status-ts';
 import sendResponse from '../../utils/sendResponse';
@@ -10,7 +9,8 @@ import catchAsync from '../../utils/catchAsync';
 // import studentValidationSchema from './student.joi.validation';
 
 const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
+  console.log(req.query);
+  const result = await StudentServices.getAllStudentsFromDB(req.query);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -32,6 +32,18 @@ const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const updateStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const {student} = req.body
+  const result = await StudentServices.updateStudentFromDB(studentId, student);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: 'Student is updated Successfully',
+    data: result,
+  });
+});
 const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.deleteStudentFromDB(studentId);
@@ -48,4 +60,5 @@ export const StudentControllers = {
   getAllStudents,
   getSingleStudent,
   deleteStudent,
+  updateStudent
 };
