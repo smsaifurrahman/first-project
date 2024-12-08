@@ -1,8 +1,6 @@
 import { TStudent } from './student.interface';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentServices } from './student.service';
-
-import { studentValidationSchema } from './student.validation';
 import { HttpStatus } from 'http-status-ts';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
@@ -22,7 +20,7 @@ const getAllStudents = catchAsync(async (req, res) => {
 
 const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
   const { studentId } = req.params;
-  const result = await StudentServices.getSingleStudentFromDB(studentId);
+  const result = await StudentServices.getSingleStudentFromDB(id);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -33,9 +31,9 @@ const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const updateStudent = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
+  const { id } = req.params;
   const {student} = req.body
-  const result = await StudentServices.updateStudentFromDB(studentId, student);
+  const result = await StudentServices.updateStudentFromDB(id, student);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -45,8 +43,8 @@ const updateStudent = catchAsync(async (req, res) => {
   });
 });
 const deleteStudent = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
-  const result = await StudentServices.deleteStudentFromDB(studentId);
+  const { id } = req.params;
+  const result = await StudentServices.deleteStudentFromDB(id);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
