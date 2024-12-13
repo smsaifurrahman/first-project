@@ -96,7 +96,7 @@ const updateSemesterRegistrationIntoDB = async(id: string, payload: Partial<TSem
   if(currentSemesterStatus=== RegistrationStatus.ENDED)  {
     throw new AppError(
       HttpStatus.BAD_REQUEST,
-      `This Semester is already ${currentSemesterStatus}.status `,
+      `This Semester is already ${currentSemesterStatus} `,
     );
   }
 
