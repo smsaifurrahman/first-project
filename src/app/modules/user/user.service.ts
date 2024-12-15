@@ -28,6 +28,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   );
+  console.log(admissionSemester);
 
   const session = await mongoose.startSession()
 

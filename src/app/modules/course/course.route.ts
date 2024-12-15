@@ -2,12 +2,15 @@ import express from 'express';
 import validateRequest from '../../middleware/validateRequest';
 import { CourseValidations } from './course.validation';
 import { CourseControllers } from './course.controller';
+import auth from '../../middleware/auth';
+import { USER_ROLE } from '../user/user.constant';
 
 
 const router = express.Router();
 
 router.post(
   '/create-course',
+  auth(USER_ROLE.admin),
   validateRequest(
     CourseValidations.createCourseValidationSchema,
   ),
@@ -15,12 +18,13 @@ router.post(
 );
 
 router.get(
-  '/:id',
+  '/:id', auth('admin', 'faculty', 'student'),
   CourseControllers.getSingleCourse,
 );
 
 router.patch(
   '/:id',
+  auth('admin'),
   validateRequest(
     CourseValidations.updateCourseValidationSchema,
   ),
