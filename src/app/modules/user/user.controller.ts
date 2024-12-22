@@ -48,18 +48,26 @@ const createAdmin = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
-  if(!token) {
-    throw new AppError(HttpStatus.NOT_FOUND, 'Token not found')
-  }
-
-  
-  const result = await UserServices.getMe(id, role);
+  const { userId, role } = req.user;
+  const result = await UserServices.getMe(userId, role);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
-    message: 'Admin is created successfully',
+    message: 'User is retrieved successfully',
+    data: result,
+  });
+});
+
+const changeStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const status = req.body;
+  const result = await UserServices.changeStatus(id, status);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: 'User status changed successfully',
     data: result,
   });
 });
@@ -68,4 +76,6 @@ export const UserControllers = {
   createStudent,
   createAdmin,
   createFaculty,
+  getMe,
+  changeStatus,
 };
