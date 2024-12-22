@@ -5,7 +5,7 @@ import { TLoginUser } from './auth.interface';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { createToken } from './auth.utils';
+import { createToken, verifyToken } from './auth.utils';
 import { sendEmail } from '../../utils/sendEmail';
 
 const loginUser = async (payLoad: TLoginUser) => {
@@ -161,10 +161,7 @@ const changePassword = async (
 const refreshToken = async (token: string) => {
   // checking if the given token is valid
 
-  const decoded = jwt.verify(
-    token,
-    config.jwt_refresh_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string)
 
   const { userId, iat } = decoded;
 
@@ -250,7 +247,7 @@ const forgetPassword = async (userId: string) => {
 
 const resetPassword = async (
   payload: { id: string; newPassword: string },
-  token,
+  token: string,
 ) => {
   // checking if the user is exist
   const user = await User.isUserExistByCustomId(payload?.id);
@@ -272,10 +269,7 @@ const resetPassword = async (
     throw new AppError(HttpStatus.FORBIDDEN, 'This user is blocked ! !');
   }
 
-  const decoded = jwt.verify(
-    token,
-    config.jwt_access_secret as string,
-  ) as JwtPayload;
+  const decoded = verifyToken(token, config.jwt_access_secret as string);
 
   // if id in token matches with the id provided from client
   if (payload?.id !== decoded?.userId) {

@@ -94,6 +94,7 @@ const getSingleStudentFromDB = async (id: string) => {
       path: 'academicDepartment',
       populate: 'academicFaculty',
     });
+    console.log(result);
 
   return result;
 };
