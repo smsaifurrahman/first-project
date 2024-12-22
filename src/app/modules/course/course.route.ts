@@ -32,7 +32,7 @@ router.patch(
 );
 
 router.delete(
-    '/:id',
+    '/:id', auth('admin'),
     CourseControllers.deleteCourse,
   );
 

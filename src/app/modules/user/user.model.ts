@@ -10,6 +10,11 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
       unique: true,
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
@@ -79,7 +84,6 @@ userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
     new Date(passwordChangedTimeStamp).getTime() / 1000;
 
   return passwordChangedTime > jwtIssuedTimeStamp;
- 
 };
 
 export const User = model<TUser, UserModel>('User', userSchema);

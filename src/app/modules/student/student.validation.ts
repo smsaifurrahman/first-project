@@ -28,7 +28,7 @@ const createLocalGuardianValidationSchema = z.object({
   // address: z.string(),
 });
 
-export const createStudentValidationSchema = z.object({
+ const createStudentValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20),
     student: z.object({
@@ -72,7 +72,8 @@ const updateLocalGuardianValidationSchema = z.object({
   address: z.string().optional(),
 });
 
-export const updateStudentValidationSchema = z.object({
+
+const updateStudentValidationSchema = z.object({
   body: z.object({
     student: z.object({
       name: updateUserNameValidationSchema,
