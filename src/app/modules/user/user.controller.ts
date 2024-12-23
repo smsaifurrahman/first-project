@@ -8,10 +8,9 @@ import AppError from '../../errors/AppError';
 const createStudent: RequestHandler = catchAsync(async (req, res, next) => {
   const { password, student: studentData } = req.body;
 
-  // const { error,value } = studentValidationSchema.validate(studentData);
 
   // will call service func to send this data
-  const result = await UserServices.createStudentIntoDB(password, studentData);
+  const result = await UserServices.createStudentIntoDB(   req.file, password, studentData);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,

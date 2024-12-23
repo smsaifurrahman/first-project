@@ -7,12 +7,18 @@ import { createAdminValidationSchema } from '../admin/admin.validation';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from './user.constant';
 import { UserValidation } from './user.validation';
+import { upload } from '../../utils/sendImageToCloudinary';
 
 const router = express.Router();
 
 // will call controller function
 router.post(
   '/create-student', auth(USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request , res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(studentValidations.createStudentValidationSchema),
   UserControllers.createStudent,
 );
