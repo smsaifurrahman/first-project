@@ -26,7 +26,7 @@ const updateEnrolledCourseMarks = catchAsync(async (req, res) => {
     facultyId,
     req.body,
   );
-  console.log(result);
+
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
