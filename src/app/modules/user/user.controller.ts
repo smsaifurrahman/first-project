@@ -23,7 +23,7 @@ const createStudent: RequestHandler = catchAsync(async (req, res, next) => {
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty: facultyData } = req.body;
   console.log(req.body);
-  // console.log(facultyData);
+  console.log(facultyData);
 
   const result = await UserServices.createFacultyIntoDB(req.file, password, facultyData);
 

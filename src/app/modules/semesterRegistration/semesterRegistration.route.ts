@@ -3,11 +3,14 @@ import express from 'express';
 import { SemesterRegistrationValidations } from './semesterRegistration.validation';
 import validateRequest from '../../middleware/validateRequest';
 import { SemesterRegistrationController } from './semesterRegistration.controller';
+import auth from '../../middleware/auth';
+import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 
 router.post(
   '/create-semester-registration',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
@@ -16,11 +19,18 @@ router.post(
 
 router.get(
   '/:id',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   SemesterRegistrationController.getSingleSemesterRegistration,
 );
 
 router.patch(
   '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
   ),
@@ -32,10 +42,10 @@ router.get(
   SemesterRegistrationController.getSingleSemesterRegistration,
 );
 
-// router.delete(
-//   '/:id',
-//   SemesterRegistrationController.deleteSemesterRegistration,
-// );
+router.delete(
+  '/:id',
+  SemesterRegistrationController.deleteSemesterRegistration,
+);
 
 router.get('/', SemesterRegistrationController.getAllSemesterRegistrations);
 

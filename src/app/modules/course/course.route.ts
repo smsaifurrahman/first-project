@@ -5,41 +5,63 @@ import { CourseControllers } from './course.controller';
 import auth from '../../middleware/auth';
 import { USER_ROLE } from '../user/user.constant';
 
-
 const router = express.Router();
 
 router.post(
   '/create-course',
-  auth(USER_ROLE.admin),
-  validateRequest(
-    CourseValidations.createCourseValidationSchema,
-  ),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse,
 );
 
 router.get(
-  '/:id', auth('admin', 'faculty', 'student'),
+  '/:id',
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.superAdmin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   CourseControllers.getSingleCourse,
 );
 
 router.patch(
   '/:id',
-  auth('admin'),
-  validateRequest(
-    CourseValidations.updateCourseValidationSchema,
-  ),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(CourseValidations.updateCourseValidationSchema),
   CourseControllers.updateCourse,
 );
 
 router.delete(
-    '/:id', auth('admin'),
-    CourseControllers.deleteCourse,
-  );
+  '/:id',
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  CourseControllers.deleteCourse,
+);
 
-  router.put('/:courseId/assign-faculties', validateRequest(CourseValidations.facultiesWithCourseValidationSchema), CourseControllers.assignFacultiesWithCourse);
+router.put(
+  '/:courseId/assign-faculties',
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
+  CourseControllers.assignFacultiesWithCourse,
+);
 
-  router.delete('/:courseId/remove-faculties', validateRequest(CourseValidations.facultiesWithCourseValidationSchema), CourseControllers.removeFacultiesFromCourse)
+router.delete(
+  '/:courseId/remove-faculties',
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
+  CourseControllers.removeFacultiesFromCourse,
+);
 
-router.get('/', CourseControllers.getAllCourses);
+router.get(
+  '/',
+  auth(
+    USER_ROLE.admin,
+    USER_ROLE.superAdmin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  CourseControllers.getAllCourses,
+);
 
 export const CourseRoutes = router;
