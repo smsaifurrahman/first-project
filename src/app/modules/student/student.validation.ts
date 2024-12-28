@@ -28,7 +28,7 @@ const createLocalGuardianValidationSchema = z.object({
   // address: z.string(),
 });
 
- const createStudentValidationSchema = z.object({
+const createStudentValidationSchema = z.object({
   body: z.object({
     password: z.string().max(20).optional(),
     student: z.object({
@@ -44,18 +44,18 @@ const createLocalGuardianValidationSchema = z.object({
       guardian: createGuardianValidationSchema,
       localGuardian: createLocalGuardianValidationSchema,
       admissionSemester: z.string(),
-      // admissionDepartment: z.string(),
-      // profileImg: z.string(),
       academicDepartment: z.string(),
     }),
   }),
 });
 
-const updateUserNameValidationSchema = z.object({
-  firstName: z.string().min(1).max(20).optional(),
-  middleName: z.string().optional(),
-  lastName: z.string().optional(),
-}).optional();
+const updateUserNameValidationSchema = z
+  .object({
+    firstName: z.string().min(1).max(20).optional(),
+    middleName: z.string().optional(),
+    lastName: z.string().optional(),
+  })
+  .optional();
 
 const updateGuardianValidationSchema = z.object({
   fatherName: z.string().optional(),
@@ -72,7 +72,6 @@ const updateLocalGuardianValidationSchema = z.object({
   contactNo: z.string().optional(),
   address: z.string().optional(),
 });
-
 
 const updateStudentValidationSchema = z.object({
   body: z.object({
@@ -91,7 +90,6 @@ const updateStudentValidationSchema = z.object({
       guardian: updateGuardianValidationSchema.optional(),
       localGuardian: updateLocalGuardianValidationSchema.optional(),
       admissionSemester: z.string().optional(),
-      profileImg: z.string().optional(),
       academicDepartment: z.string().optional(),
     }),
   }),

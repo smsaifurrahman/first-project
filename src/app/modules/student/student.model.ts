@@ -1,5 +1,4 @@
-import { UUIDVersion } from 'validator';
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import {
   TStudent,
   TUserName,
@@ -8,8 +7,6 @@ import {
   StudentModel,
 } from './student.interface';
 import validator from 'validator';
-
-
 
 const UserNameSchema = new Schema<TUserName>({
   firstName: {
@@ -133,15 +130,15 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     profileImg: { type: String, default: '' },
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicSemester'
+      ref: 'AcademicSemester',
     },
     academicDepartment: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicDepartment'
+      ref: 'AcademicDepartment',
     },
     academicFaculty: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicFaculty'
+      ref: 'AcademicFaculty',
     },
 
     isDeleted: {
@@ -160,8 +157,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 studentSchema.virtual('fullName').get(function () {
   return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
-
-
 
 // query middleware
 
@@ -188,7 +183,6 @@ studentSchema.statics.isUserExists = async function (id: string) {
 
   return existingUser;
 };
-
 
 // create a Model
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
