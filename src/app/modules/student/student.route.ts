@@ -13,7 +13,7 @@ router.get('/', StudentControllers.getAllStudents);
 
 router.get(
   '/:id',
-  auth('admin', 'faculty'),
+  auth('superAdmin', 'admin', 'faculty'),
   StudentControllers.getSingleStudent,
 );
 
