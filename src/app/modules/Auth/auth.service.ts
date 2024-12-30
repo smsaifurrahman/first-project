@@ -12,6 +12,7 @@ const loginUser = async (payLoad: TLoginUser) => {
   // checking if the user exists!
   const user = await User.isUserExistByCustomId(payLoad.id);
 
+
   if (!user) {
     throw new AppError(HttpStatus.NOT_FOUND, 'This User is not found');
   }

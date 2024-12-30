@@ -20,6 +20,7 @@ export type NewUser = {
 
 export interface UserModel extends Model<TUser> {
   isUserExistByCustomId(id: string): Promise<TUser>;
+  
   isPasswordMatched(
     plainTextPassword: string,
     hashedPassword: string,
