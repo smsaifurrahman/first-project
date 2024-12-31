@@ -175,6 +175,7 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
 const getMyOfferedCoursesFromDB = async (userId: string) => {
   // find the student
   const student = await Student.findOne({ id: userId });
+
   if (!student) {
     throw new AppError(HttpStatus.NOT_FOUND, 'User is not found');
   }
@@ -216,7 +217,7 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         let: {
           currentOngoingRegistrationSemester:
             currentOngoingRegistrationSemester._id,
-          currentStudent: student.id,
+          currentStudent: student._id,
         },
         pipeline: [
           {
@@ -240,6 +241,80 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
             },
           },
         ],
+        as: 'enrolledCourses',
+      },
+    },
+    {
+      $lookup: {
+        from: 'enrolledcourses',
+        let: {
+          currentStudent: student._id,
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ['$student', '$$currentStudent'],
+                  },
+                  {
+                    $eq: ['$isCompleted', true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: 'completedCourses',
+      },
+    },
+    {
+      $addFields: {
+        completedCourseIds: {
+          $map: {
+            input: '$completedCourses',
+            as: 'completed',
+            in: '$$completed.course',
+          },
+        },
+      },
+    },
+    {
+      $addFields: {
+        isPreRequisitesFulfilled: {
+          $or: [
+            {
+              $eq: ['$course.preRequisiteCourses', []],
+            },
+            {
+              $setIsSubset: [
+                '$course.preRequisiteCourses.course',
+                '$completedCourseIds',
+              ],
+            },
+          ],
+        },
+
+        isAlreadyEnrolled: {
+          $in: [
+            '$course._id',
+            {
+              $map: {
+                input: '$enrolledCourses',
+                as: 'enroll',
+                in: '$$enroll.course',
+              },
+            },
+          ],
+        },
+      },
+    },
+
+    {
+      $match: {
+        isAlreadyEnrolled: false,
+        isPreRequisitesFulfilled: true
       },
     },
   ]);
