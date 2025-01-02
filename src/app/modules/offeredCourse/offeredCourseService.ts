@@ -316,9 +316,8 @@ const getMyOfferedCoursesFromDB = async (userId: string) => {
         isAlreadyEnrolled: false,
         isPreRequisitesFulfilled: true
       },
-    },{
-      
     }
+    
   ]);
 
   return result;
